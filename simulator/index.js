@@ -2546,6 +2546,51 @@ var canvasPainter = {
 
   };
 
+  //"rect"物件
+  objTypes['rect'] = {
+
+  //======================================建立物件=========================================
+  create: function(mouse) {
+    return {type: 'rect', p1: mouse, p2: mouse};
+  },
+
+  //使用lineobj原型
+  c_mousedown: objTypes['lineobj'].c_mousedown,
+  c_mousemove: objTypes['lineobj'].c_mousemove,
+  c_mouseup: objTypes['lineobj'].c_mouseup,
+  move: objTypes['lineobj'].move,
+  clicked: objTypes['lineobj'].clicked,
+  dragging: objTypes['lineobj'].dragging,
+
+  //=================================將物件畫到Canvas上====================================
+  draw: function(obj, canvas, aboveLight) {
+  //var ctx = canvas.getContext('2d');
+  if (aboveLight)return;
+  ctx.globalCompositeOperation = 'lighter';
+
+  let nw = {
+    x: Math.min(obj.p1.x, obj.p2.x),
+    y: Math.min(obj.p1.y, obj.p2.y),
+  };
+  let size = {
+    x: Math.abs(obj.p1.x - obj.p2.x),
+    y: Math.abs(obj.p1.y - obj.p2.y),
+  };
+
+  ctx.strokeStyle = 'rgb(64,64,64)';
+  ctx.fillStyle = 'rgb(32,32,32)';
+
+  ctx.beginPath();
+  ctx.rect(nw.x, nw.y, size.x, size.y);
+  ctx.stroke();
+  ctx.fill();
+
+  ctx.globalAlpha = 1;
+  //ctx.globalCompositeOperation = 'source-over';
+  }
+
+  };
+
   //"ruler"物件
   objTypes['ruler'] = {
 
@@ -2853,7 +2898,7 @@ var canvasPainter = {
   var clickExtent_line = 10;
   var clickExtent_point = 10;
   var clickExtent_point_construct = 10;
-  var tools_normal = ['laser', 'radiant', 'parallel', 'blackline', 'ruler', 'protractor', ''];
+  var tools_normal = ['laser', 'radiant', 'parallel', 'blackline', 'ruler', 'rect', 'protractor', ''];
   var tools_withList = ['mirror_', 'refractor_'];
   var tools_inList = ['mirror', 'arcmirror', 'idealmirror', 'lens', 'refractor', 'halfplane', 'circlelens'];
   var modes = ['light', 'extended_light', 'images', 'observer'];
@@ -3061,6 +3106,35 @@ var canvasPainter = {
       setScale(this.value / 100); //為了讓不支援oninput的瀏覽器可使用
       createUndoPoint();
     };
+
+    document.getElementById('gridsize').oninput = function()
+    {
+      gridSize = parseInt(this.value);
+      draw();
+    };
+    document.getElementById('gridsize_txt').onfocusout = function()
+    {
+      gridSize = parseInt(this.value);
+      draw();
+    };
+    document.getElementById('gridsize_txt').onkeyup = function()
+    {
+      if (event.keyCode === 13) {
+        gridSize = parseInt(this.value);
+        draw();
+      }
+    };
+    document.getElementById('gridsize').onmouseup = function()
+    {
+      gridSize = parseInt(this.value);
+      createUndoPoint();
+    };
+    document.getElementById('gridsize').ontouchend = function()
+    {
+      gridSize = parseInt(this.value);
+      createUndoPoint();
+    };
+
     cancelMousedownEvent('rayDensity');
     document.getElementById('rayDensity').oninput = function()
     {
@@ -3304,16 +3378,14 @@ var canvasPainter = {
     waitingRays = []; //清空等待區
     shotRayCount = 0;
 
-
-
     ctx.save();
     ctx.setTransform(scale, 0, 0, scale, 0, 0);
     if (document.getElementById('showgrid').checked)
     {
       //畫出格線
-      //ctx.lineWidth = 0.5;
+      ctx.lineWidth = gridSize/20;
       ctx.strokeStyle = 'rgb(64,64,64)';
-      var dashstep = 4;
+      var dashstep = gridSize/5;
       ctx.beginPath();
       for (var x = origin.x / scale % gridSize; x <= canvas.width / scale; x += gridSize)
       {
@@ -5040,6 +5112,10 @@ var canvasPainter = {
     //Blocker
     document.getElementById('tool_blackline').value = getMsg('toolname_blackline');
     document.getElementById('tool_blackline').dataset['n'] = getMsg('toolname_blackline');
+
+    //Ruler
+    document.getElementById('tool_rect').value = getMsg('toolname_rect');
+    document.getElementById('tool_rect').dataset['n'] = getMsg('toolname_rect');
 
     //Ruler
     document.getElementById('tool_ruler').value = getMsg('toolname_ruler');

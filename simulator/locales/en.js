@@ -57,6 +57,9 @@ locales["en"] = {
   "toolname_blackline": {
     "message": "Blocker"
   },
+  "toolname_rect": {
+    "message": "Rectangle"
+  },
   "toolname_ruler": {
     "message": "Ruler"
   },
@@ -125,6 +128,9 @@ locales["en"] = {
   },
   "tool_blackline": {
     "message": "Blocker"
+  },
+  "tool_rect": {
+    "message": "Rect"
   },
   "tool_ruler": {
     "message": "Ruler"
@@ -197,6 +203,9 @@ locales["en"] = {
   },
   "grid": {
     "message": "Snap to Grid"
+  },
+  "gridsize": {
+    "message": "Grid Size"
   },
   "snaptogrid": {
     "message": "Snap to Grid"
@@ -279,6 +288,9 @@ locales["en"] = {
   "tool_blackline_popover": {
     "message": "A line-segment light blocker which absorbs the incident rays. (Drag or click to create.)"
   },
+  "tool_rect_popover": {
+    "message": "A rectangle, purely decorative"
+  },
   "tool_ruler_popover": {
     "message": "A ruler from a point for zero and another point. The scale is in pixels. (Drag or click to create.)"
   },
@@ -311,6 +323,9 @@ locales["en"] = {
   },
   "lockobjs_popover": {
     "message": "Defines whether the objects can be moved or not."
+  },
+  "gridsize_popover": {
+    "message": "Defines the grid size."
   },
   "zoom_popover": {
     "message": "Zoom the view with percentage."
